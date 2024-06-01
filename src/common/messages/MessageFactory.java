@@ -10,23 +10,26 @@ import common.types.MessageType;
 
 public class MessageFactory {
     public static Message createMessage(MessageType type) {
-        
         switch (type) {
             case STATUS:
                 return new StatusMessage();
             case PLAY:
                 return new PlayMessage();
-            case QUIT:
-                return new QuitMessage();
             case CANCEL_CONNECTION:
                 return new CancelConnectionMessage();
             case MOVE:
                 return new MoveMessage();
             case SYMBOL:
                 return new SymbolMessage();
-            default:
-                return null;
+            case TURN:
+                return new TurnMessage();
+            case CONNECTION:
+                return new ConnectionMessage();
+            case EXIT:
+                return new ExitMessage();
         }
+
+        return null;
     }
 
     public static byte[] serialize(Message message) throws IOException {

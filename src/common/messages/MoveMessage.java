@@ -46,5 +46,9 @@ public class MoveMessage implements Message {
         return MessageType.MOVE;
     }
 
-
+    @Override
+    public String toString() {
+        return "{ Type: " + this.getType() +
+               " X: " + this.x + " Y: " + this.y + " }";
+    }
 }

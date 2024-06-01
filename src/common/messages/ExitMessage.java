@@ -6,25 +6,25 @@ import java.io.IOException;
 
 import common.types.MessageType;
 
-public class PlayMessage implements Message {
+public class ExitMessage implements Message {
+
+    public ExitMessage() {
     
-    public PlayMessage() {
+    }
+   
+    @Override
+    public void write(DataOutputStream out) throws IOException {
+
+    }
+
+    @Override
+    public void read(DataInputStream in) throws IOException {
 
     }
 
     @Override
     public MessageType getType() {
-        return MessageType.PLAY;
-    }
-
-    @Override
-    public void write(DataOutputStream out) throws IOException {
-    
-    }
-    
-    @Override
-    public void read(DataInputStream in) throws IOException {
-    
+        return MessageType.EXIT;
     }
 
     @Override

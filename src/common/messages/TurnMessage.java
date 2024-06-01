@@ -22,6 +22,10 @@ public class TurnMessage implements Message {
     public MessageType getType() {
         return MessageType.TURN;
     }
+    
+    public boolean getTurn() {
+        return this.turn;
+    }
 
     @Override
     public void write(DataOutputStream out) throws IOException {
@@ -33,4 +37,8 @@ public class TurnMessage implements Message {
         this.turn = in.readBoolean();
     }
     
+    @Override
+    public String toString() {
+        return "{ Type: " + this.getType() + ", Turn: " + this.turn + " }";
+    }
 }

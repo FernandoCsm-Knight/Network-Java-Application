@@ -1,20 +1,46 @@
 package server;
+
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Server {
-    
-    ServerSocket serverSocket;
-    AtomicBoolean running;
-    PlayerManager manager;
-    Thread managerThread;
-    Thread serverThread;
+import common.types.IPVersion;
+import server.managers.PlayerManager;
+import server.services.ServerService;
 
-    public Server(int port) {
+public class Server implements ServerService {
+    
+    private ServerSocket serverSocket;
+    private PlayerManager manager;
+    private Thread managerThread;
+    private Thread serverThread;
+    
+    private final AtomicBoolean running;
+    private final IPVersion currentIpVersion;
+
+    public Server(int port) throws UnknownHostException {
+        this(IPVersion.IPv4, "localhost", port);
+    }
+
+    public Server(IPVersion ipVersion, String address, int port) {
+        this.running = new AtomicBoolean(false);
+        this.currentIpVersion = ipVersion;
+        
         try {
-            this.serverSocket = new ServerSocket(port);
-            this.running = new AtomicBoolean(false);
+            InetAddress inetAddress = InetAddress.getByName(address);
+
+            if(ipVersion == IPVersion.IPv4) {
+                this.serverSocket = new ServerSocket(port, 50, inetAddress);
+            } else {
+                this.serverSocket = new ServerSocket();
+                this.serverSocket.bind(new InetSocketAddress(inetAddress, port));
+            }
+
             this.manager = new PlayerManager();
+            loggerThread.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -27,14 +53,24 @@ public class Server {
         this.managerThread.start();
 
         this.serverThread = new Thread(() -> {
-            System.out.println("Server started on port " + this.serverSocket.getLocalPort());
-            
+            logger.info(
+                "Server started on " + 
+                currentIpVersion.name() + " socket " +
+                this.serverSocket.getInetAddress().getHostAddress() +
+                ":" + this.serverSocket.getLocalPort()
+            );
+
             while(this.running.get()) {
                 try {
-                    this.manager.addPlayer(this.serverSocket.accept());
+                    Socket c = this.serverSocket.accept();
+                    this.manager.addClient(c);
+                    logger.info("Client connected: " + c.getInetAddress().getHostAddress());
                 } catch(Exception e) {
-                    if(running.get()) e.printStackTrace();
-                    else System.out.println("Server stopped.");
+                    if(running.get()) {
+                        e.printStackTrace();
+                    } else {
+                        logger.warn("Server stopped.");
+                    }
                 }
             }
 
@@ -55,11 +91,6 @@ public class Server {
             e.printStackTrace();
         }
 
-        System.out.println("Server stopped.");
-    }
-
-    public static void main(String[] args) {
-        Server server = new Server(8080);
-        server.start();
+        logger.warn("Server stopped.");
     }
 }

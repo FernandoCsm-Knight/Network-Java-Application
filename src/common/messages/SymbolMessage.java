@@ -8,17 +8,17 @@ import common.types.MessageType;
 
 public class SymbolMessage implements Message {
     
-    private String symbol;
+    private char symbol;
     
     public SymbolMessage() {
-        this.symbol = "";
+        this.symbol = '\0';
     }
 
-    public SymbolMessage(String symbol) {
+    public SymbolMessage(char symbol) {
         this.symbol = symbol;
     }
     
-    public String getSymbol() {
+    public char getSymbol() {
         return symbol;
     }
     
@@ -29,12 +29,16 @@ public class SymbolMessage implements Message {
     
     @Override
     public void write(DataOutputStream out) throws IOException {
-        out.writeUTF(symbol);
+        out.writeChar(symbol);
     }
     
     @Override
     public void read(DataInputStream in) throws IOException {
-        symbol = in.readUTF();
+        symbol = in.readChar();
     }
 
+    @Override
+    public String toString() {
+        return "{ Type: " + this.getType() + ", Symbol: " + symbol + " }";
+    }
 }

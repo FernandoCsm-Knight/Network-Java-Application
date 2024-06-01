@@ -9,5 +9,5 @@ import common.types.MessageType;
 public interface Message {
     public void write(DataOutputStream out) throws IOException;
     public void read(DataInputStream in) throws IOException;
-    public MessageType getType();   
+    public MessageType getType();
 }
