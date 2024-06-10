@@ -97,9 +97,8 @@ public class LobbyScreen extends ScreenWidget implements ClientListener {
 
     @Override
     public void onMessageReceived(Message message) {
-        if(message.getType() == MessageType.STATUS) {
+        if(message.getType() == MessageType.GAME_STATUS) {
             StatusMessage statusMessage = (StatusMessage) message;
-            System.out.println("LobbyScreen: " + statusMessage.getStatus());
             
             if(statusMessage.getGameStatus() == GameStatus.PLAYING) {
                 context.show(navigator, "Game");

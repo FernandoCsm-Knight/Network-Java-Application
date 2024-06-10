@@ -7,25 +7,25 @@ import java.io.IOException;
 import common.types.GameStatus;
 import common.types.MessageType;
 
-public class StatusMessage implements Message {
+public class RoomStatusMessage implements Message {
     
+    private int id;
     private String status;
     private GameStatus gameStatus;
-    private int id;
 
-    public StatusMessage() {
+    public RoomStatusMessage() {
         this("");
     }
 
-    public StatusMessage(String status) {
+    public RoomStatusMessage(String status) {
         this(status, GameStatus.NONE);
     }
 
-    public StatusMessage(String status, GameStatus gameStatus) {
+    public RoomStatusMessage(String status, GameStatus gameStatus) {
         this(status, gameStatus, -1);
     }
 
-    public StatusMessage(String status, GameStatus gameStatus, int id) {
+    public RoomStatusMessage(String status, GameStatus gameStatus, int id) {
         this.id = id;
         this.status = status;
         this.gameStatus = gameStatus;
@@ -45,7 +45,7 @@ public class StatusMessage implements Message {
 
     @Override
     public MessageType getType() {
-        return MessageType.GAME_STATUS;
+        return MessageType.ROOM_STATUS;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class StatusMessage implements Message {
         out.writeInt(this.gameStatus.ordinal());
         out.writeUTF(status);
     }
-    
+
     @Override
     public void read(DataInputStream in) throws IOException {
         this.id = in.readInt();
@@ -64,7 +64,7 @@ public class StatusMessage implements Message {
 
     @Override
     public String toString() {
-        return "{ Type: " + this.getType() +
-               ", Status: " + this.status + ", Game status: " + this.gameStatus + " }";
+        return "{ Type: " + this.getType() + ", Id: " + this.id + ", Status: " + this.status + ", GameStatus: " + this.gameStatus + " }";
     }
+
 }

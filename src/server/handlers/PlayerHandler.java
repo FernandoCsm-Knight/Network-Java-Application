@@ -11,6 +11,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import common.messages.Message;
 import common.messages.MessageFactory;
 import common.messages.MoveMessage;
+import common.messages.SymbolMessage;
+import common.messages.UdpConfigMessage;
 import server.managers.PlayerManager;
 import server.services.ServerService;
 
@@ -18,16 +20,20 @@ public class PlayerHandler implements Runnable, Closeable, ServerService {
     
     private MoveMessage move;
     private boolean online;
-
+    private char symbol;
+    private int updPort;
+    
     private final Socket socket;
     private final Semaphore semaphore;
     private final PlayerManager manager;
     private final AtomicBoolean running;
-
+    
     public DataOutputStream out;
     public DataInputStream in;
+    public GameHandler game;
 
     public PlayerHandler(Socket socket, PlayerManager manager) {
+        this.updPort = -1;
         this.online = false;
         this.socket = socket;
         this.manager = manager;
@@ -44,6 +50,23 @@ public class PlayerHandler implements Runnable, Closeable, ServerService {
         }
     }
     
+    public Socket getSocket() {
+        return this.socket;
+    }
+
+    public int getUdpPort() {
+        return this.updPort;
+    }
+
+    public void setSymbol(char symbol) {
+        this.symbol = symbol;
+        this.send(new SymbolMessage(symbol));
+    }
+
+    public char getSymbol() {
+        return this.symbol;
+    }
+
     @Override
     public void run() {
         int length = 0;
@@ -80,6 +103,11 @@ public class PlayerHandler implements Runnable, Closeable, ServerService {
             case CANCEL_CONNECTION:
                 this.online = false;
                 this.manager.cancelConnection(this);
+                break;
+
+            case UDP_CONFIG:
+                UdpConfigMessage udpConfig = (UdpConfigMessage) message;
+                this.updPort = udpConfig.getPort();
                 break;
             
             case EXIT:

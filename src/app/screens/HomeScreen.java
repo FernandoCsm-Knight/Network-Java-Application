@@ -18,6 +18,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import app.components.CustomButton;
+import app.components.DevelopersPanel;
+import app.components.TitlePanel;
 import app.services.ScreenWidget;
 import common.design.ApplicationFont;
 import common.design.ColorPalette;
@@ -78,24 +80,8 @@ public class HomeScreen extends ScreenWidget implements ClientListener {
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.CENTER;
 
-        JPanel titlePanel = new JPanel();
-        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
-        titlePanel.setBackground(ColorPalette.LIGHT_GRAY);
-
-        JLabel titleLabel = new JLabel("A Senile Game", SwingConstants.CENTER);
-        titleLabel.setFont(ApplicationFont.MAIN_TITLE_FONT);
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel subtitleLabel = new JLabel("Make a sequence of three!", SwingConstants.CENTER);
-        subtitleLabel.setFont(ApplicationFont.SUBTITLE_FONT);
-        subtitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        titlePanel.add(titleLabel);
-        titlePanel.add(Box.createVerticalStrut(10));
-        titlePanel.add(subtitleLabel);
-
         gbc.gridy = 0;
-        gridPanel.add(titlePanel, gbc);
+        gridPanel.add(new TitlePanel("A Senile Game", "Make a sequence of three!"), gbc);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 50, 20));
@@ -154,20 +140,9 @@ public class HomeScreen extends ScreenWidget implements ClientListener {
         gridPanel.add(errorPanel, gbc);
         errorPanel.setVisible(false);
 
-        JPanel bottomPanel = new JPanel();
-        bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
-        bottomPanel.setPreferredSize(new Dimension(800, 60));
-        bottomPanel.setBackground(ColorPalette.LIGHT_GRAY);
-
-        JLabel editorLabel = new JLabel("Made by Augusto S. Oliveira | Pedro H. Pena | Fernando C. Maria", SwingConstants.CENTER);
-        editorLabel.setFont(ApplicationFont.SMALL_FONT);
-        editorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        
-        bottomPanel.add(editorLabel);
-
         add(headerPanel, BorderLayout.NORTH);
         add(gridPanel, BorderLayout.CENTER);
-        add(bottomPanel, BorderLayout.SOUTH);
+        add(new DevelopersPanel(), BorderLayout.SOUTH);
 
         client.addListener(this);
     }

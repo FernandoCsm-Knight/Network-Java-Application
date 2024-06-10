@@ -44,8 +44,7 @@ public class PlayerStatusManager implements Runnable {
         return valid;
     }
 
-    private void shutdown() {
+    public void shutdown() {
         this.running.set(false);
     }
-    
 }

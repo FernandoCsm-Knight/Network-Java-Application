@@ -14,7 +14,7 @@ public abstract class ScreenWidget extends JPanel {
     public static Thread connectionThread;
     public static Thread clientThread;
 
-    public static void dispose() {
+    public static void close() {
         client.close();
         connectionListener.shutdown();
     }

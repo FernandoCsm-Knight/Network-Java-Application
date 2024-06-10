@@ -1,6 +1,7 @@
 package server.managers;
 
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -12,6 +13,7 @@ import common.messages.StatusMessage;
 import common.types.GameStatus;
 import server.handlers.GameHandler;
 import server.handlers.PlayerHandler;
+import server.handlers.RoomHandler;
 import server.services.ServerService;
 
 public class PlayerManager implements Runnable, ServerService {
@@ -23,6 +25,7 @@ public class PlayerManager implements Runnable, ServerService {
     private final Set<PlayerHandler> playerSet;
     private final Set<PlayerHandler> players;
     private final AtomicBoolean running;
+    private final RoomHandler room;
 
     public PlayerManager() {
         this.queue = new DynamicQueue<PlayerHandler>();
@@ -30,17 +33,15 @@ public class PlayerManager implements Runnable, ServerService {
         this.players = new HashSet<PlayerHandler>();
         this.executor = Executors.newCachedThreadPool();
         this.running = new AtomicBoolean(false);
+        this.room = new RoomHandler();
+
+        this.executor.execute(this.room);
     }
 
     public void addClient(Socket socket) {
         PlayerHandler player = new PlayerHandler(socket, this);
         this.players.add(player);
         this.executor.execute(player);
-    }
-
-    public void shutdown() {
-        this.running.set(false);
-        this.executor.shutdown();
     }
 
     public void connect(PlayerHandler player) {
@@ -50,6 +51,7 @@ public class PlayerManager implements Runnable, ServerService {
     public void cancelConnection(PlayerHandler player) {
         boolean removed = this.queue.remove(player);
         if(!removed) this.playerSet.remove(player);
+        if(player.game != null) this.room.remove(player.game);
         this.players.remove(player);
     }
 
@@ -66,7 +68,9 @@ public class PlayerManager implements Runnable, ServerService {
                 }
 
                 logger.info("Starting game with " + this.playerSet.size() + " players.");
-                this.executor.execute(new GameHandler(new HashSet<PlayerHandler>(this.playerSet)));
+                GameHandler game = new GameHandler(new ArrayList<PlayerHandler>(this.playerSet), this.room);
+                this.room.add(game);
+                this.executor.execute(game);
                 this.playerSet.clear();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -75,6 +79,11 @@ public class PlayerManager implements Runnable, ServerService {
         }
 
         this.shutdown();
+    }
+
+    public void shutdown() {
+        this.running.set(false);
+        this.executor.shutdown();
     }
 
 }

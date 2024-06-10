@@ -11,8 +11,10 @@ import common.types.MessageType;
 public class MessageFactory {
     public static Message createMessage(MessageType type) {
         switch (type) {
-            case STATUS:
+            case GAME_STATUS:
                 return new StatusMessage();
+            case PLAYER_STATUS:
+                return new PlayerStatusMessage();
             case PLAY:
                 return new PlayMessage();
             case CANCEL_CONNECTION:
@@ -27,6 +29,12 @@ public class MessageFactory {
                 return new ConnectionMessage();
             case EXIT:
                 return new ExitMessage();
+            case BOARD_MOVE:
+                return new BoardMoveMessage();
+            case UDP_CONFIG:
+                return new UdpConfigMessage();
+            case ROOM_STATUS:
+                return new RoomStatusMessage();
         }
 
         return null;

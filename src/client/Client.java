@@ -4,6 +4,7 @@ import java.io.Closeable;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
+import java.net.DatagramSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
@@ -19,9 +20,11 @@ import common.messages.MessageFactory;
 public class Client implements Runnable, Closeable {
     
     private Socket socket;
+    private DatagramSocket udpSocket;
     private DataOutputStream out;
     private DataInputStream in;
     private boolean connected;
+    private boolean udpConnected;
     
     private final List<ClientListener> listeners;
     private final AtomicBoolean running;
@@ -33,6 +36,14 @@ public class Client implements Runnable, Closeable {
     public Client(boolean tryConnection) {
         if(tryConnection) this.tryToConnect();
         else this.connected = false;
+
+        try {
+            this.udpSocket = new DatagramSocket(0);
+            this.udpConnected = true;
+        } catch(Exception e) {
+            this.udpConnected = false;
+            e.printStackTrace();
+        }
 
         this.listeners = new ArrayList<>();
         this.running = new AtomicBoolean(true);
@@ -62,6 +73,10 @@ public class Client implements Runnable, Closeable {
         }
     }
 
+    public DatagramSocket getUdpSocket() {
+        return this.udpSocket;
+    }
+
     public void send(Message message) {
         try {
             byte[] data = MessageFactory.serialize(message);
@@ -88,6 +103,10 @@ public class Client implements Runnable, Closeable {
 
     public boolean isConnected() {
         return this.connected;
+    }
+
+    public boolean isUdpConnected() {
+        return this.udpConnected;
     }
 
     public boolean tryToConnect() {
@@ -124,6 +143,7 @@ public class Client implements Runnable, Closeable {
             if(this.out != null) this.out.close();
             if(this.in != null) this.in.close();
             if(this.socket != null && !this.socket.isClosed()) this.socket.close();
+            if(this.udpSocket != null && !this.udpSocket.isClosed()) this.udpSocket.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -11,7 +11,7 @@ public class TurnMessage implements Message {
     private boolean turn;
 
     public TurnMessage() {
-        this.turn = false;
+        this.turn = true;
     }
 
     public TurnMessage(boolean turn) {

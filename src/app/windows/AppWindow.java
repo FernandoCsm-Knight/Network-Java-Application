@@ -12,6 +12,7 @@ import app.screens.LobbyScreen;
 import app.screens.SettingsScreen;
 import app.services.ScreenWidget;
 import common.integration.ConnectionListener;
+import common.messages.UdpConfigMessage;
 
 public class AppWindow extends JFrame {
 
@@ -33,6 +34,10 @@ public class AppWindow extends JFrame {
         if(ScreenWidget.client.tryToConnect()) {
             ScreenWidget.clientThread = new Thread(ScreenWidget.client);
             ScreenWidget.clientThread.start();
+
+            if(ScreenWidget.client.isUdpConnected()) {
+                ScreenWidget.client.send(new UdpConfigMessage(ScreenWidget.client.getUdpSocket().getLocalPort()));
+            }
         }
 
         ScreenWidget.navigator.add(new HomeScreen(), "Home");
@@ -46,7 +51,7 @@ public class AppWindow extends JFrame {
 
     @Override
     public void dispose() {
-        ScreenWidget.dispose();
+        ScreenWidget.close();
         super.dispose();
     }
 }

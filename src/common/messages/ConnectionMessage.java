@@ -41,6 +41,6 @@ public class ConnectionMessage implements Message {
     @Override
     public String toString() {
         return "{ Type: " + this.getType() +
-               " Connection state: " + this.state + " }";
+               ", Connection state: " + this.state + " }";
     }
 }
