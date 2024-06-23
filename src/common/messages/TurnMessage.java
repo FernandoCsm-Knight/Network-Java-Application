@@ -11,7 +11,7 @@ public class TurnMessage implements Message {
     private boolean turn;
 
     public TurnMessage() {
-        this.turn = false;
+        this.turn = true;
     }
 
     public TurnMessage(boolean turn) {
@@ -21,6 +21,10 @@ public class TurnMessage implements Message {
     @Override
     public MessageType getType() {
         return MessageType.TURN;
+    }
+    
+    public boolean getTurn() {
+        return this.turn;
     }
 
     @Override
@@ -33,4 +37,8 @@ public class TurnMessage implements Message {
         this.turn = in.readBoolean();
     }
     
+    @Override
+    public String toString() {
+        return "{ Type: " + this.getType() + ", Turn: " + this.turn + " }";
+    }
 }

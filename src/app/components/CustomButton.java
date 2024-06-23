@@ -1,4 +1,4 @@
-package components;
+package app.components;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -11,6 +11,8 @@ import java.awt.geom.RoundRectangle2D;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.border.EmptyBorder;
+
+import common.design.ColorPalette;
 
 
 public class CustomButton extends JButton {

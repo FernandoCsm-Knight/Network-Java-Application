@@ -10,23 +10,34 @@ import common.types.MessageType;
 
 public class MessageFactory {
     public static Message createMessage(MessageType type) {
-        
         switch (type) {
-            case STATUS:
+            case GAME_STATUS:
                 return new StatusMessage();
+            case PLAYER_STATUS:
+                return new PlayerStatusMessage();
             case PLAY:
                 return new PlayMessage();
-            case QUIT:
-                return new QuitMessage();
             case CANCEL_CONNECTION:
                 return new CancelConnectionMessage();
             case MOVE:
                 return new MoveMessage();
             case SYMBOL:
                 return new SymbolMessage();
-            default:
-                return null;
+            case TURN:
+                return new TurnMessage();
+            case CONNECTION:
+                return new ConnectionMessage();
+            case EXIT:
+                return new ExitMessage();
+            case BOARD_MOVE:
+                return new BoardMoveMessage();
+            case UDP_CONFIG:
+                return new UdpConfigMessage();
+            case ROOM_STATUS:
+                return new RoomStatusMessage();
         }
+
+        return null;
     }
 
     public static byte[] serialize(Message message) throws IOException {

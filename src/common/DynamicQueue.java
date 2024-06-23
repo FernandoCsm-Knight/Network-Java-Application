@@ -24,14 +24,18 @@ public class DynamicQueue<T> {
         return count;
     }
 
-    public void remove(T element) {
+    public boolean remove(T element) {
+        boolean removed;
+
         synchronized (lock) {
-            try {
-                queue.remove(element);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            removed = queue.remove(element);
         }
+
+        if (removed) {
+            semaphore.acquireUninterruptibly();
+        }
+
+        return removed;
     }
 
     public void enqueue(T element) {

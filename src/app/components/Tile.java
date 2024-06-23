@@ -1,4 +1,4 @@
-package components;
+package app.components;
 
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
@@ -7,9 +7,14 @@ import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 import javax.swing.border.EmptyBorder;
 
+import common.design.ColorPalette;
+
 public class Tile extends JButton {
 
-    public Tile(String text) {
+    private int row;
+    private int col;
+
+    public Tile(String text, int row, int col) {
         super(text);
         setFocusPainted(false);
         setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -30,5 +35,16 @@ public class Tile extends JButton {
                 setBackground(ColorPalette.GREEN);
             }
         });
+
+        this.row = row;
+        this.col = col;
+    }
+
+    public int getRow() {
+        return this.row;
+    }
+
+    public int getCol() {
+        return this.col;
     }
 }

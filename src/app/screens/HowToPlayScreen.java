@@ -1,9 +1,8 @@
-package screens;
+package app.screens;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
@@ -12,8 +11,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import components.ColorPalette;
-import components.CustomButton;
+import app.components.CustomButton;
+import app.services.ScreenWidget;
+import common.design.ApplicationFont;
+import common.design.ColorPalette;
 
 public class HowToPlayScreen extends ScreenWidget {
     
@@ -36,7 +37,7 @@ public class HowToPlayScreen extends ScreenWidget {
         titlePanel.setBackground(ColorPalette.LIGHT_GRAY);
 
         JLabel titleLabel = new JLabel("How To Play", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Serif", Font.BOLD, 48));
+        titleLabel.setFont(ApplicationFont.MAIN_TITLE_FONT);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titlePanel.add(titleLabel);
 
@@ -58,6 +59,7 @@ public class HowToPlayScreen extends ScreenWidget {
         gridPanel.add(buttonPanel, gbc);
 
         add(gridPanel, BorderLayout.CENTER);
+        // TODO: Add the rest of the components
     }
 
 }

@@ -26,4 +26,9 @@ public class CancelConnectionMessage implements Message {
         public void read(DataInputStream in) throws IOException {
         
         }
+
+        @Override
+        public String toString() {
+            return "{ Type: " + this.getType() + " }";
+        }
 }
